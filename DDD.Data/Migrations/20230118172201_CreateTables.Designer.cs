@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DDD.Data.Migrations
 {
     [DbContext(typeof(ContextSettings))]
-    [Migration("20230118122821_Initial")]
-    partial class Initial
+    [Migration("20230118172201_CreateTables")]
+    partial class CreateTables
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -56,7 +56,7 @@ namespace DDD.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Customer", (string)null);
+                    b.ToTable("Customers", (string)null);
                 });
 
             modelBuilder.Entity("DDD.Domain.Entities.Product", b =>
@@ -70,6 +70,9 @@ namespace DDD.Data.Migrations
                     b.Property<bool>("Avaliable")
                         .HasColumnType("bit");
 
+                    b.Property<int>("CustomerId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(250)
@@ -78,14 +81,11 @@ namespace DDD.Data.Migrations
                     b.Property<decimal>("Value")
                         .HasColumnType("money");
 
-                    b.Property<int>("customerId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("customerId");
+                    b.HasIndex("CustomerId");
 
-                    b.ToTable("Product", (string)null);
+                    b.ToTable("Products", (string)null);
                 });
 
             modelBuilder.Entity("DDD.Domain.Entities.User", b =>
@@ -113,18 +113,18 @@ namespace DDD.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("User", (string)null);
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("DDD.Domain.Entities.Product", b =>
                 {
-                    b.HasOne("DDD.Domain.Entities.Customer", "customer")
+                    b.HasOne("DDD.Domain.Entities.Customer", "Customer")
                         .WithMany("products")
-                        .HasForeignKey("customerId")
+                        .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("customer");
+                    b.Navigation("Customer");
                 });
 
             modelBuilder.Entity("DDD.Domain.Entities.Customer", b =>

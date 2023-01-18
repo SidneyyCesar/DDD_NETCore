@@ -14,7 +14,7 @@ namespace DDD.Data.Context
         {
             var customerModel = modelBuilder.Entity<Customer>();
 
-            customerModel.ToTable("Customer");
+            customerModel.ToTable("Customers");
             customerModel.Property("Name").HasColumnType("varchar").HasMaxLength(100);
             customerModel.Property("LastName").HasColumnType("varchar").HasMaxLength(50);
             customerModel.Property("Email").HasColumnType("varchar").HasMaxLength(200);     
@@ -22,19 +22,20 @@ namespace DDD.Data.Context
             customerModel.HasKey("Id");
 
             var userModel = modelBuilder.Entity<User>();
-            userModel.ToTable("User");
+            userModel.ToTable("Users");
             userModel.Property("Name").HasColumnType("varchar").HasMaxLength(100);
             userModel.Property("Password").HasColumnType("varchar").HasMaxLength(50);
             userModel.Property("Email").HasColumnType("varchar").HasMaxLength(200);    
             userModel.HasKey("Id");     
 
             var productModel = modelBuilder.Entity<Product>();
-            productModel.ToTable("Product");
+            productModel.ToTable("Products");
             productModel.Property(p => p.Value).HasColumnType("money").IsRequired();
             productModel.Property(p => p.Name).IsRequired().HasMaxLength(250);
-            productModel.HasOne(c => c.customer)
+            productModel.Navigation(x=> x.Customer);
+            productModel.HasOne(c => c.Customer)
                         .WithMany(p=> p.products)
-                        .HasForeignKey(x=> x.customerId);
+                        .HasForeignKey(x=> x.CustomerId);
         }
     }
 }

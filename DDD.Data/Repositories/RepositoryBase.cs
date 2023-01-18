@@ -6,7 +6,7 @@ namespace DDD.Data.Repositories
 {
   public class RepositoryBase<TEntity> : IDisposable, IRepositoryBase<TEntity> where TEntity: class
   {
-    private readonly ContextSettings _context;
+    internal readonly ContextSettings _context;
 
     public RepositoryBase(ContextSettings context)
     {
