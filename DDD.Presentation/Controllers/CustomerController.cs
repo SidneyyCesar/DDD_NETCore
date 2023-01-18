@@ -1,4 +1,5 @@
-﻿using DDD.Domain.Entities;
+﻿using DDD.Application.Interfaces;
+using DDD.Domain.Entities;
 using DDD.Domain.Interfaces.Repositories;
 using DDD.Presentation.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -7,16 +8,15 @@ namespace DDD.Presentation.Controllers
 {
     public class CustomerController : Controller
     {
-        private readonly ICustomerRepository _customerRepository;
-        public CustomerController(ICustomerRepository customerRepository)
+        private readonly ICustomerApplicationService _customerApplicationService;
+        public CustomerController(ICustomerApplicationService _customerApplicationService)
         {
-            this._customerRepository = customerRepository;
+            this._customerApplicationService = _customerApplicationService;
         }
         
-        // GET: CustomerController
         public ActionResult Index()
         {
-            var customerList = _customerRepository.List();
+            var customerList = _customerApplicationService.List();
 
             var listVm = new List<CustomerVm>();
 
@@ -24,19 +24,29 @@ namespace DDD.Presentation.Controllers
             {
                 listVm.Add(new CustomerVm()
                 {
+                    Id = item.Id,
                     Name = item.Name,
                     Email = item.Email,
-                    LastName = item.LastName
+                    LastName = item.LastName,
+                    Active = item.Active
                 });
             }
 
             return View(listVm);
         }
-
-        // GET: CustomerController/Details/5
         public ActionResult Details(int id)
         {
-            return View();
+            var customer = _customerApplicationService.Select(id);
+            var customerVm = new CustomerVm()
+            {
+                Id = customer.Id,
+                Name = customer.Name,
+                Email = customer.Email,
+                LastName = customer.LastName,
+                Active = customer.Active
+            };
+
+            return View(customerVm);
         }
 
         public ActionResult Create()
@@ -52,58 +62,84 @@ namespace DDD.Presentation.Controllers
             {
                 var customerDomain = new Customer()
                 {
+                    Id = customerVm.Id,
                     Name = customerVm.Name,
                     LastName = customerVm.LastName,
-                    Email = customerVm.Email
+                    Email = customerVm.Email,
+                    Active = customerVm.Active
                 };
 
-                _customerRepository.Add(customerDomain);
+                _customerApplicationService.Add(customerDomain);
 
                 return RedirectToAction("Index");
             }
 
             return View(customerVm);
         }
-        // GET: CustomerController/Edit/5
+
         public ActionResult Edit(int id)
         {
-            return View();
+            var customer = _customerApplicationService.Select(id);
+            var customerVm = new CustomerVm()
+            {
+                Id = customer.Id,
+                Name = customer.Name,
+                Email = customer.Email,
+                LastName = customer.LastName,
+                Active = customer.Active
+            };
+
+            return View(customerVm);
         }
 
-        // POST: CustomerController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(CustomerVm customerVm)
         {
-            try
+            if (ModelState.IsValid)
             {
-                return RedirectToAction(nameof(Index));
+                var customerDomain = new Customer()
+                {
+                    Id = customerVm.Id,
+                    Name = customerVm.Name,
+                    LastName = customerVm.LastName,
+                    Email = customerVm.Email,
+                    Active = customerVm.Active
+                    
+                };
+
+                _customerApplicationService.Update(customerDomain);
+
+                return RedirectToAction("Index");
             }
-            catch
-            {
-                return View();
-            }
+
+            return View(customerVm);
         }
 
-        // GET: CustomerController/Delete/5
         public ActionResult Delete(int id)
         {
-            return View();
+            var customer = _customerApplicationService.Select(id);
+            var customerVm = new CustomerVm()
+            {
+                Id = customer.Id,
+                Name = customer.Name,
+                Email = customer.Email,
+                LastName = customer.LastName,
+                Active = customer.Active
+            };
+
+            return View(customerVm);
         }
 
-        // POST: CustomerController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        [ActionName("Delete")]
+        public ActionResult DeleteConfirmed(int id)
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            var customer = _customerApplicationService.Select(id);
+            _customerApplicationService.Remove(customer);
+
+            return RedirectToAction("Index");
         }
     }
 }

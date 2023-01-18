@@ -5,6 +5,10 @@ namespace DDD.Presentation.Models
 {
     public class ProductVm
     {
+        public ProductVm()
+        {
+            this.Customer = new CustomerVm();
+        }
         [Key]
         public int  Id { get; set; }
 
@@ -21,7 +25,7 @@ namespace DDD.Presentation.Models
         [DisplayName("Disponível")]
         public bool Avaliable { get; set; }
         public int CustomerId { get; set; }
-        public virtual CustomerVm? customer { get; set; }
+        public virtual CustomerVm Customer { get; set; }
 
     }
 }

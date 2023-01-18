@@ -27,6 +27,8 @@ namespace DDD.Presentation.Models
         [ScaffoldColumn(false)]
         public DateTime CreateAt { get; set; }
 
+        public bool Active { get; set; }
+
         public virtual IEnumerable<ProductVm>? Products { get; set; }
 
     }

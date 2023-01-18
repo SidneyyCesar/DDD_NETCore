@@ -20,8 +20,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DDD.Data\DDD.Data.csproj" />
-    <ProjectReference Include="..\DDD.Domain\DDD.Domain.csproj" />
+    <ProjectReference Include="..\DDD.Application\DDD.Application.csproj" />
+    <ProjectReference Include="..\DDD.Domain\DDD.Domain.csproj />
+    <ProjectReference Include="..\DDD.Data\DDD.Data.csproj" />"
   </ItemGroup>
 
   <ItemGroup>

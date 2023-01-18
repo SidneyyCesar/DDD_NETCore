@@ -1,6 +1,5 @@
 using DDD.Data.Context;
-using DDD.Data.Repositories;
-using DDD.Domain.Interfaces.Repositories;
+using DDD.Presentation;
 using DDD.Presentation.AutoMapper;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,7 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-builder.Services.AddTransient<ICustomerRepository, CustomerRepository>();
+builder.Services.ConfigureServices();
 
 builder.Services.AddDbContextPool<ContextSettings>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
