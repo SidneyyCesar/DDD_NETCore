@@ -12,7 +12,6 @@ namespace DDD.Domain.Entities
         public string Email { get; set; } = string.Empty;
         public DateTime CreateAt { get; set; }
         public virtual IEnumerable<Product>? products { get; set; }
-
         public bool Active { get; set; }
 
         public bool SpecialCustomer(Customer customer)
