@@ -4,11 +4,16 @@
     ViewBag.Title = "Index";
 }
 
-<h2>Index</h2>
+<h6>Listagem</h6>
 
 <p>
-    @Html.ActionLink("Create New", "Create")
+    @Html.ActionLink("Novo", "Create")
 </p>
+
+<p>
+    @Html.ActionLink("Voltar", "Index", "Home")
+</p>
+
 <table class="table">
     <tr>
         <th>

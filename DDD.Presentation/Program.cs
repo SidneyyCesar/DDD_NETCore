@@ -1,6 +1,5 @@
 using DDD.Data.Context;
 using DDD.Presentation;
-using DDD.Presentation.AutoMapper;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -20,12 +19,6 @@ if (!app.Environment.IsDevelopment())
     app.UseExceptionHandler("/Home/Error");
     app.UseHsts();
 }
-
-var config = new AutoMapper.MapperConfiguration(config =>
-{
-    config.AddProfile<ModelToDomainMappingProfile>();
-    config.AddProfile<DomainToModelMappingProfile>();
-});
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();

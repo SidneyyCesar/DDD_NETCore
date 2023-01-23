@@ -1,4 +1,5 @@
-﻿using DDD.Application.Interfaces;
+﻿using AutoMapper;
+using DDD.Application.Interfaces;
 using DDD.Domain.Entities;
 using DDD.Domain.Interfaces.Repositories;
 using DDD.Presentation.Models;
@@ -9,9 +10,11 @@ namespace DDD.Presentation.Controllers
     public class CustomerController : Controller
     {
         private readonly ICustomerApplicationService _customerApplicationService;
-        public CustomerController(ICustomerApplicationService _customerApplicationService)
+        private readonly IMapper _mapper;
+        public CustomerController(ICustomerApplicationService _customerApplicationService, IMapper mapper)
         {
             this._customerApplicationService = _customerApplicationService;
+            this._mapper = mapper;
         }
         
         public ActionResult Index()
@@ -22,14 +25,8 @@ namespace DDD.Presentation.Controllers
 
             foreach (var item in customerList)
             {
-                listVm.Add(new CustomerVm()
-                {
-                    Id = item.Id,
-                    Name = item.Name,
-                    Email = item.Email,
-                    LastName = item.LastName,
-                    Active = item.Active
-                });
+                var customerVm = _mapper.Map<CustomerVm>(item);
+                listVm.Add(customerVm);
             }
 
             return View(listVm);
@@ -37,14 +34,7 @@ namespace DDD.Presentation.Controllers
         public ActionResult Details(int id)
         {
             var customer = _customerApplicationService.Select(id);
-            var customerVm = new CustomerVm()
-            {
-                Id = customer.Id,
-                Name = customer.Name,
-                Email = customer.Email,
-                LastName = customer.LastName,
-                Active = customer.Active
-            };
+            var customerVm = _mapper.Map<CustomerVm>(customer);
 
             return View(customerVm);
         }
@@ -60,16 +50,9 @@ namespace DDD.Presentation.Controllers
         {
             if (ModelState.IsValid)
             {
-                var customerDomain = new Customer()
-                {
-                    Id = customerVm.Id,
-                    Name = customerVm.Name,
-                    LastName = customerVm.LastName,
-                    Email = customerVm.Email,
-                    Active = customerVm.Active
-                };
+                var customer = _mapper.Map<Customer>(customerVm);
 
-                _customerApplicationService.Add(customerDomain);
+                _customerApplicationService.Add(customer);
 
                 return RedirectToAction("Index");
             }
@@ -80,14 +63,7 @@ namespace DDD.Presentation.Controllers
         public ActionResult Edit(int id)
         {
             var customer = _customerApplicationService.Select(id);
-            var customerVm = new CustomerVm()
-            {
-                Id = customer.Id,
-                Name = customer.Name,
-                Email = customer.Email,
-                LastName = customer.LastName,
-                Active = customer.Active
-            };
+            var customerVm = _mapper.Map<CustomerVm>(customer);
 
             return View(customerVm);
         }
@@ -98,15 +74,7 @@ namespace DDD.Presentation.Controllers
         {
             if (ModelState.IsValid)
             {
-                var customerDomain = new Customer()
-                {
-                    Id = customerVm.Id,
-                    Name = customerVm.Name,
-                    LastName = customerVm.LastName,
-                    Email = customerVm.Email,
-                    Active = customerVm.Active
-                    
-                };
+                var customerDomain = _mapper.Map<Customer>(customerVm);
 
                 _customerApplicationService.Update(customerDomain);
 
@@ -119,14 +87,7 @@ namespace DDD.Presentation.Controllers
         public ActionResult Delete(int id)
         {
             var customer = _customerApplicationService.Select(id);
-            var customerVm = new CustomerVm()
-            {
-                Id = customer.Id,
-                Name = customer.Name,
-                Email = customer.Email,
-                LastName = customer.LastName,
-                Active = customer.Active
-            };
+            var customerVm = _mapper.Map<CustomerVm>(customer);
 
             return View(customerVm);
         }

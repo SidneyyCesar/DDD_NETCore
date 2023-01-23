@@ -1,6 +1,6 @@
-﻿using DDD.Application.Interfaces;
+﻿using AutoMapper;
+using DDD.Application.Interfaces;
 using DDD.Domain.Entities;
-using DDD.Domain.Interfaces.Repositories;
 using DDD.Presentation.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -11,11 +11,12 @@ namespace DDD.Presentation.Controllers
     {
         private readonly IProductApplicationService _productService;
         private readonly ICustomerApplicationService _customerService;
-
-        public ProductController(IProductApplicationService productService, ICustomerApplicationService customerService)
+        private readonly IMapper _mapper;
+        public ProductController(IProductApplicationService productService, ICustomerApplicationService customerService, IMapper mapper)
         {
             _productService = productService;
             _customerService = customerService;
+            this._mapper = mapper;
         }
 
         public ActionResult Index()
@@ -26,18 +27,8 @@ namespace DDD.Presentation.Controllers
 
             foreach (var product in productList)
             {
-                listVm.Add(new ProductVm()
-                {
-                    Id = product.Id,
-                    Name = product.Name,
-                    Value = product.Value,
-                    Avaliable = product.Avaliable,
-                    CustomerId = product.CustomerId,
-                    Customer = new CustomerVm()
-                    {
-                        Name = product.Customer.Name
-                    }
-                });
+                var productVm = _mapper.Map<ProductVm>(product);
+                listVm.Add(productVm);
             }
 
             return View(listVm);
@@ -46,16 +37,9 @@ namespace DDD.Presentation.Controllers
         public ActionResult Details(int id)
         {
             var product = _productService.Select(id);
-            var produtoViewModel = new ProductVm()
-            {
-                Id = product.Id,
-                Name = product.Name,
-                Value = product.Value,
-                Avaliable = product.Avaliable,
-                CustomerId = product.CustomerId
-            };
+            var productVm = _mapper.Map<ProductVm>(product);
 
-            return View(produtoViewModel);
+            return View(productVm);
         }
 
         public ActionResult Create()
@@ -68,14 +52,7 @@ namespace DDD.Presentation.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(ProductVm product)
         {
-            var productDomain = new Product()
-            {
-                Id = product.Id,
-                Name = product.Name,
-                Value = product.Value,
-                Avaliable = product.Avaliable,
-                CustomerId = product.CustomerId
-            };
+            var productDomain = _mapper.Map<Product>(product);
 
             _productService.Add(productDomain);
 
@@ -85,14 +62,7 @@ namespace DDD.Presentation.Controllers
         public ActionResult Edit(int id)
         {
             var product = _productService.Select(id);
-            var productVm = new ProductVm()
-            {
-                Id = product.Id,
-                Name = product.Name,
-                Value = product.Value,
-                Avaliable = product.Avaliable,
-                CustomerId = product.CustomerId
-            };
+            var productVm = _mapper.Map<ProductVm>(product);
 
             ViewBag.CustomerId = new SelectList(_customerService.List(), "Id", "Name", product.CustomerId);
 
@@ -105,14 +75,7 @@ namespace DDD.Presentation.Controllers
         {
             if (ModelState.IsValid)
             {
-                var productDomain = new Product()
-                {
-                    Id = productVm.Id,
-                    Name = productVm.Name,
-                    Value = productVm.Value,
-                    Avaliable = productVm.Avaliable,
-                    CustomerId = productVm.CustomerId
-                };
+                var productDomain = _mapper.Map<Product>(productVm);
 
                 _productService.Update(productDomain);
 
@@ -126,14 +89,7 @@ namespace DDD.Presentation.Controllers
         public ActionResult Delete(int id)
         {
             var product = _productService.Select(id);
-            var productVm = new ProductVm()
-            {
-                Id = product.Id,
-                Name = product.Name,
-                Value = product.Value,
-                Avaliable = product.Avaliable,
-                CustomerId = product.CustomerId
-            };
+            var productVm = _mapper.Map<Product>(product);
 
             return View(productVm);
         }
