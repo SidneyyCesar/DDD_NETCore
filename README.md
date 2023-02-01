@@ -1,4 +1,4 @@
-<h5>DDD MVC NET Core 6 - Template Project </h5>
+<h5>DDD MVC NET Core 7 - Template Project </h5>
 
 </hr>
 
@@ -10,7 +10,7 @@ The function project is provide a template project DDD, to implement new feature
 
  &#10004; <b>Technologies</b>
 
-* .NET 6 
+* .NET 7 
 * C#
 * DDD
 * IoC
