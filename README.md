@@ -1,4 +1,4 @@
-<h5>DDD MVC NET Core 7 - Template Project </h5>
+<h5>DDD MVC NET Core 6 - Template Project </h5>
 
 </hr>
 
