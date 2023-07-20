@@ -10,7 +10,7 @@ The function project is provide a template project DDD, to implement new feature
 
  &#10004; <b>Technologies</b>
 
-* .NET 7 
+* .NET 6 
 * C#
 * DDD
 * IoC
